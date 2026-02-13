@@ -15,6 +15,7 @@ from nlp_processor import (
     get_location_skill_data, get_salary_skill_correlation, detect_declining_skills,
     compute_tfidf, categorize_skill, SKILL_TAXONOMY
 )
+from pdf_report import generate_pdf_report
 
 def download_plotly_chart(fig, filename, label="Download Chart as PNG", width=1200, height=600, key=None):
     try:
@@ -144,6 +145,17 @@ with export_placeholder:
         key="dl_csv_sidebar"
     )
 
+    if "pdf_data" not in st.session_state:
+        with st.spinner("Preparing PDF report..."):
+            st.session_state["pdf_data"] = generate_pdf_report(filtered_df)
+
+    st.download_button(
+        label="📥 Download Full PDF Report",
+        data=st.session_state["pdf_data"],
+        file_name="IT_Skill_Demand_Analysis_Report.pdf",
+        mime="application/pdf",
+        key="dl_pdf_sidebar"
+    )
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
