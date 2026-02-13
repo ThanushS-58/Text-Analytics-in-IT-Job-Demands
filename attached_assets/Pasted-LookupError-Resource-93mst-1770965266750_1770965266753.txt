@@ -1,0 +1,22 @@
+LookupError: ********************************************************************** Resource [93mstopwords[0m not found. Please use the NLTK Downloader to obtain the resource: [31m>>> import nltk >>> nltk.download('stopwords') [0m For more information see: https://www.nltk.org/data.html Attempted to load [93mcorpora/stopwords[0m Searched in: - '/home/runner/nltk_data' - '/nix/store/6334pjf6w2q623rgvwi499qaiym1p6yv-python3-3.11.14/nltk_data' - '/nix/store/6334pjf6w2q623rgvwi499qaiym1p6yv-python3-3.11.14/share/nltk_data' - '/nix/store/6334pjf6w2q623rgvwi499qaiym1p6yv-python3-3.11.14/lib/nltk_data' - '/usr/share/nltk_data' - '/usr/local/share/nltk_data' - '/usr/lib/nltk_data' - '/usr/local/lib/nltk_data' **********************************************************************
+Traceback:
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 129, in exec_func_with_error_handling
+    result = func()
+             ^^^^^^
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 689, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/workspace/app.py", line 12, in <module>
+    from nlp_processor import (
+File "/home/runner/workspace/nlp_processor.py", line 29, in <module>
+    stop_words = set(stopwords.words('english'))
+                     ^^^^^^^^^^^^^^^
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/nltk/corpus/util.py", line 120, in __getattr__
+    self.__load()
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/nltk/corpus/util.py", line 86, in __load
+    raise e
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/nltk/corpus/util.py", line 81, in __load
+    root = nltk.data.find(f"{self.subdir}/{self.__name}")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/nltk/data.py", line 579, in find
+    raise LookupError(resource_not_found)
