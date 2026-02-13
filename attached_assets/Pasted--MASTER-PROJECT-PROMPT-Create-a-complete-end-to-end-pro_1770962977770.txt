@@ -1,0 +1,95 @@
+🔹 MASTER PROJECT PROMPT
+
+Create a complete end-to-end project titled “An NLP and Business Intelligence Framework for IT Skill Demand Analysis from Job Postings.”
+
+The project should analyze IT job posting data (CSV dataset with fields such as Job Title, Job Description, Skills, Experience, Location, Salary, and Posting Date) using Natural Language Processing (NLP) techniques and visualize insights using Business Intelligence (BI) dashboards.
+
+Project Requirements:
+
+Data Processing
+
+Load and clean the dataset using Python (Pandas).
+
+Handle missing values and duplicates.
+
+Convert date fields properly for year-wise analysis.
+
+NLP Implementation
+
+Apply text preprocessing: lowercasing, tokenization, stop-word removal, and lemmatization.
+
+Use TF-IDF vectorization for skill extraction.
+
+Perform keyword extraction and skill frequency analysis.
+
+Create structured skill taxonomies (e.g., Programming, Cloud, AI, DevOps).
+
+Optionally include Named Entity Recognition (NER) or Topic Modeling (LDA).
+
+Trend Analysis
+
+Identify top trending skills year-wise.
+
+Detect declining technologies.
+
+Analyze role-wise skill demand (e.g., Data Scientist, DevOps, Full Stack).
+
+Compare fresher vs experienced skill requirements.
+
+Perform location-based skill demand analysis.
+
+Visualization (Main Highlight)
+
+Prepare cleaned data for BI tools (Power BI).
+
+Create dashboards including:
+
+Skill demand trend line chart (Year vs Skill)
+
+Top skills word cloud
+
+Role vs Skills matrix
+
+Experience-level vs Skill demand chart
+
+Location-based demand map
+
+Salary vs Skill correlation (optional)
+
+Scalability & Future Scope
+
+Design the system to allow future integration of predictive analytics.
+
+Allow future automation using real-time job scraping APIs.
+
+Structure the project to support workforce planning and educational alignment.
+
+Technologies to Use
+
+Python (Pandas, NLTK/Spacy, Scikit-learn)
+
+Gensim (optional for LDA)
+
+Power BI for dashboards
+
+Deliverables
+
+Complete Python code
+
+Cleaned dataset output file for BI
+
+Dashboard design explanation
+
+Project documentation (Abstract, Introduction, System Architecture, Modules, Future Scope)
+
+If you want, I can also give:
+
+🔹 Separate prompt only for coding
+
+🔹 Separate prompt only for Power BI
+
+🔹 Prompt to generate final year project report (100+ pages format)
+
+🔹 Prompt to build GitHub-ready project
+
+Tell me what you need next 👌
