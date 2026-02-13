@@ -15,7 +15,6 @@ from nlp_processor import (
     get_location_skill_data, get_salary_skill_correlation, detect_declining_skills,
     compute_tfidf, categorize_skill, SKILL_TAXONOMY
 )
-from pdf_report import generate_pdf_report
 
 def download_plotly_chart(fig, filename, label="Download Chart as PNG", width=1200, height=600, key=None):
     try:
@@ -60,23 +59,10 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    .stApp {
-        background: linear-gradient(135deg, #e8f0fe 0%, #f3e8ff 30%, #fce4ec 60%, #e0f7fa 100%);
-    }
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #eef2ff 0%, #faf5ff 50%, #fff1f2 100%);
-        border-right: 1px solid #e2e8f0;
-    }
-    [data-testid="stSidebar"] .stMarkdown h2,
-    [data-testid="stSidebar"] .stMarkdown h3 {
-        color: #4338ca;
-    }
     .main-header {
         font-size: 2.2rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #4338ca, #7c3aed, #c026d3);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: #1f2937;
         text-align: center;
         padding: 0.5rem 0 0.2rem 0;
     }
@@ -86,49 +72,6 @@ st.markdown("""
         text-align: center;
         padding-bottom: 1rem;
         font-weight: 500;
-    }
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
-        background: rgba(255,255,255,0.6);
-        border-radius: 12px;
-        padding: 4px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        padding: 8px 18px;
-        border-radius: 8px;
-        font-weight: 500;
-    }
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
-        color: white !important;
-        border-radius: 8px;
-    }
-    [data-testid="stMetricValue"] {
-        color: #4338ca;
-    }
-    .stDownloadButton > button {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    .stDownloadButton > button:hover {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-    }
-    h1, h2, h3 {
-        color: #312e81;
-    }
-    .stSubheader {
-        color: #4338ca;
-    }
-    [data-testid="stExpander"] {
-        background: rgba(255,255,255,0.7);
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -201,19 +144,6 @@ with export_placeholder:
         key="dl_csv_sidebar"
     )
 
-    if st.button("📄 Generate Full PDF Report", key="gen_pdf"):
-        with st.spinner("Generating PDF report with all charts..."):
-            pdf_bytes = generate_pdf_report(filtered_df)
-            st.session_state["pdf_data"] = pdf_bytes
-
-    if "pdf_data" in st.session_state:
-        st.download_button(
-            label="📥 Download PDF Report",
-            data=st.session_state["pdf_data"],
-            file_name="IT_Skill_Demand_Analysis_Report.pdf",
-            mime="application/pdf",
-            key="dl_pdf_sidebar"
-        )
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
