@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from io import BytesIO
+import base64
 import os
 
 from nlp_processor import (
@@ -14,6 +15,40 @@ from nlp_processor import (
     get_location_skill_data, get_salary_skill_correlation, detect_declining_skills,
     compute_tfidf, categorize_skill, SKILL_TAXONOMY
 )
+
+def download_plotly_chart(fig, filename, label="Download Chart as PNG", width=1200, height=600, key=None):
+    try:
+        fig_copy = go.Figure(fig)
+        fig_copy.update_layout(width=width, height=height)
+        img_bytes = fig_copy.to_image(format="png", scale=2)
+        st.download_button(
+            label=f"📥 {label}",
+            data=img_bytes,
+            file_name=filename,
+            mime="image/png",
+            key=key
+        )
+    except Exception:
+        html_str = fig.to_html(include_plotlyjs="cdn", full_html=True)
+        st.download_button(
+            label=f"📥 {label} (HTML)",
+            data=html_str.encode("utf-8"),
+            file_name=filename.replace(".png", ".html"),
+            mime="text/html",
+            key=key
+        )
+
+def download_matplotlib_fig(fig, filename, label="Download Chart as PNG", key=None):
+    buf = BytesIO()
+    fig.savefig(buf, format="png", dpi=200, bbox_inches="tight", facecolor="white")
+    buf.seek(0)
+    st.download_button(
+        label=f"📥 {label}",
+        data=buf.getvalue(),
+        file_name=filename,
+        mime="image/png",
+        key=key
+    )
 
 st.set_page_config(
     page_title="IT Skill Demand Analysis",
@@ -165,11 +200,13 @@ with tabs[0]:
         fig.update_layout(height=500, hovermode="x unified",
                           legend=dict(orientation="h", yanchor="bottom", y=-0.4))
         st.plotly_chart(fig, use_container_width=True)
+        download_plotly_chart(fig, "skill_demand_trends.png", "Download Trend Line Chart", key="dl_trend1")
 
         fig2 = px.area(trend_df, x="Year", y="Count", color="Skill",
                        title="Absolute Skill Mention Counts Over Time")
         fig2.update_layout(height=450, legend=dict(orientation="h", yanchor="bottom", y=-0.4))
         st.plotly_chart(fig2, use_container_width=True)
+        download_plotly_chart(fig2, "skill_counts_area.png", "Download Area Chart", key="dl_trend2")
     else:
         st.info("No trend data available for the selected filters.")
 
@@ -184,6 +221,7 @@ with tabs[1]:
         ax.imshow(wc, interpolation="bilinear")
         ax.axis("off")
         st.pyplot(fig_wc)
+        download_matplotlib_fig(fig_wc, "skills_word_cloud.png", "Download Word Cloud", key="dl_wc")
         plt.close(fig_wc)
 
         st.subheader("Top Skills by Frequency")
@@ -193,6 +231,7 @@ with tabs[1]:
                          color="Count", color_continuous_scale="viridis")
         fig_bar.update_layout(height=500, yaxis=dict(autorange="reversed"))
         st.plotly_chart(fig_bar, use_container_width=True)
+        download_plotly_chart(fig_bar, "top_skills_frequency.png", "Download Top Skills Chart", key="dl_topskills")
 
         st.subheader("TF-IDF Top Keywords from Job Descriptions")
         valid_texts = filtered_df["Processed_Description"][filtered_df["Processed_Description"] != ""]
@@ -204,6 +243,7 @@ with tabs[1]:
                                color="TF-IDF Score", color_continuous_scale="plasma")
             fig_tfidf.update_layout(height=500, yaxis=dict(autorange="reversed"))
             st.plotly_chart(fig_tfidf, use_container_width=True)
+            download_plotly_chart(fig_tfidf, "tfidf_keywords.png", "Download TF-IDF Chart", key="dl_tfidf")
     else:
         st.info("No skill data available.")
 
@@ -228,6 +268,7 @@ with tabs[2]:
             height=600, xaxis_tickangle=-45
         )
         st.plotly_chart(fig_heat, use_container_width=True)
+        download_plotly_chart(fig_heat, "role_vs_skills_heatmap.png", "Download Role vs Skills Heatmap", width=1400, height=700, key="dl_heatmap")
     else:
         st.info("No data available for the matrix.")
 
@@ -247,6 +288,7 @@ with tabs[3]:
                          labels={"Percentage": "% of Postings"})
         fig_exp.update_layout(height=500, legend=dict(orientation="h", yanchor="bottom", y=-0.5))
         st.plotly_chart(fig_exp, use_container_width=True)
+        download_plotly_chart(fig_exp, "experience_skill_demand.png", "Download Experience Chart", key="dl_exp")
 
         st.subheader("Fresher vs Senior Skill Comparison")
         fresher_df = filtered_df[filtered_df["Experience_Level"] == "Fresher (0-1 yrs)"]
@@ -277,6 +319,7 @@ with tabs[3]:
         fig_comp.update_layout(barmode="group", title="Fresher vs Senior+ Skill Requirements",
                                height=450, yaxis_title="% of Postings")
         st.plotly_chart(fig_comp, use_container_width=True)
+        download_plotly_chart(fig_comp, "fresher_vs_senior.png", "Download Fresher vs Senior Chart", key="dl_comp")
     else:
         st.info("No experience data available.")
 
@@ -292,6 +335,7 @@ with tabs[4]:
                              color="Job_Count", color_continuous_scale="blues")
         fig_loc_bar.update_layout(height=400, xaxis_tickangle=-45)
         st.plotly_chart(fig_loc_bar, use_container_width=True)
+        download_plotly_chart(fig_loc_bar, "jobs_by_location.png", "Download Location Bar Chart", key="dl_locbar")
 
         selected_loc = st.selectbox("Select a location to see top skills",
                                     sorted(filtered_df["Location"].unique()))
@@ -302,6 +346,7 @@ with tabs[4]:
                                    color="Percentage", color_continuous_scale="teal")
             fig_loc_skill.update_layout(height=400, yaxis=dict(autorange="reversed"))
             st.plotly_chart(fig_loc_skill, use_container_width=True)
+            download_plotly_chart(fig_loc_skill, "location_top_skills.png", "Download Location Skills Chart", key="dl_locskill")
 
         st.subheader("Location vs Skill Heatmap")
         loc_pivot = loc_data.pivot_table(values="Percentage", index="Location", columns="Skill", fill_value=0)
@@ -312,6 +357,7 @@ with tabs[4]:
         ))
         fig_loc_heat.update_layout(title="Skill Demand Across Locations", height=500, xaxis_tickangle=-45)
         st.plotly_chart(fig_loc_heat, use_container_width=True)
+        download_plotly_chart(fig_loc_heat, "location_skill_heatmap.png", "Download Location Heatmap", width=1400, height=600, key="dl_locheat")
     else:
         st.info("No location data available.")
 
@@ -327,6 +373,7 @@ with tabs[5]:
         fig_sal.update_layout(height=500, xaxis_tickangle=-45,
                               yaxis_title="Average Salary (INR)")
         st.plotly_chart(fig_sal, use_container_width=True)
+        download_plotly_chart(fig_sal, "salary_by_skill.png", "Download Salary Bar Chart", key="dl_sal")
 
         fig_bubble = px.scatter(salary_data, x="Job_Count", y="Avg_Salary",
                                 size="Job_Count", color="Skill",
@@ -335,6 +382,7 @@ with tabs[5]:
                                 labels={"Job_Count": "Number of Jobs", "Avg_Salary": "Avg Salary (INR)"})
         fig_bubble.update_layout(height=500)
         st.plotly_chart(fig_bubble, use_container_width=True)
+        download_plotly_chart(fig_bubble, "salary_vs_demand_bubble.png", "Download Bubble Chart", key="dl_bubble")
     else:
         st.info("No salary data available.")
 
@@ -350,6 +398,7 @@ with tabs[6]:
                          color="Change_%", color_continuous_scale="RdYlGn")
         fig_dec.update_layout(height=400, yaxis_title="Change in Demand (%)")
         st.plotly_chart(fig_dec, use_container_width=True)
+        download_plotly_chart(fig_dec, "declining_skills.png", "Download Declining Skills Chart", key="dl_dec")
 
         st.markdown("**Top Rising Skills**")
         rising = decline_df.tail(10).sort_values("Change_%", ascending=False)
@@ -358,6 +407,7 @@ with tabs[6]:
                           color="Change_%", color_continuous_scale="RdYlGn")
         fig_rise.update_layout(height=400, yaxis_title="Change in Demand (%)")
         st.plotly_chart(fig_rise, use_container_width=True)
+        download_plotly_chart(fig_rise, "rising_skills.png", "Download Rising Skills Chart", key="dl_rise")
 
         st.dataframe(decline_df.style.background_gradient(subset=["Change_%"], cmap="RdYlGn"), use_container_width=True)
     else:
@@ -375,12 +425,14 @@ with tabs[7]:
         fig_cat.update_traces(textposition='inside', textinfo='percent+label')
         fig_cat.update_layout(height=500)
         st.plotly_chart(fig_cat, use_container_width=True)
+        download_plotly_chart(fig_cat, "skill_taxonomy_pie.png", "Download Taxonomy Pie Chart", key="dl_catpie")
 
         fig_cat_bar = px.bar(cat_df, x="Category", y="Count",
                              title="Skill Category Frequency",
                              color="Category", color_discrete_sequence=px.colors.qualitative.Set2)
         fig_cat_bar.update_layout(height=400, xaxis_tickangle=-45, showlegend=False)
         st.plotly_chart(fig_cat_bar, use_container_width=True)
+        download_plotly_chart(fig_cat_bar, "skill_category_frequency.png", "Download Category Bar Chart", key="dl_catbar")
 
         st.subheader("Taxonomy Details")
         for category, skills in SKILL_TAXONOMY.items():
