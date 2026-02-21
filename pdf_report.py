@@ -417,7 +417,7 @@ def generate_pdf_report(filtered_df):
 
     import tempfile as _tmpfile
     tmp_pdf = os.path.join(tmpdir, "report.pdf")
-    pdf.output(tmp_pdf, 'F')
+    pdf.output(tmp_pdf)
     with open(tmp_pdf, 'rb') as _f:
         pdf_bytes = _f.read()
 
