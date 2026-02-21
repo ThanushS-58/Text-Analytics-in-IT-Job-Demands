@@ -30,8 +30,6 @@ fonttools==4.61.1
     # via
     #   fpdf2
     #   matplotlib
-fpdf==1.7.2
-    # via repl-nix-workspace (pyproject.toml)
 fpdf2==2.8.6
     # via repl-nix-workspace (pyproject.toml)
 gitdb==4.0.12
