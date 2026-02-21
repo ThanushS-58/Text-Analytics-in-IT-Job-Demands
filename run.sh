@@ -1,2 +1,2 @@
 #!/bin/bash
-streamlit run app.py --server.port 5000 --server.address 0.0.0.0 --server.headless true --server.enableCORS=false --server.enableWebsocketCompression=false
+streamlit run app.py --server.port 8501 --server.address 0.0.0.0 --server.headless true --server.enableCORS=false --server.enableWebsocketCompression=false
