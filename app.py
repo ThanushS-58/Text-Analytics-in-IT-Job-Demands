@@ -78,7 +78,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 @st.cache_data
-def load_and_process_data(filepath):
+def load_and_process_data(filepath, _mtime=None):
     df = pd.read_csv(filepath)
     df = clean_dataset(df)
     return df
@@ -100,7 +100,7 @@ if not os.path.exists(DATA_PATH):
     os.makedirs("data", exist_ok=True)
     generate_dataset()
 
-df = load_and_process_data(DATA_PATH)
+df = load_and_process_data(DATA_PATH, _mtime=os.path.getmtime(DATA_PATH))
 
 st.markdown('<div class="main-header">📊 IT Skill Demand Analysis Framework</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-header">NLP & Business Intelligence for Job Market Insights</div>', unsafe_allow_html=True)
