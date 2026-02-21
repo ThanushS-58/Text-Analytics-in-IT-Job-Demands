@@ -20,7 +20,8 @@ An NLP and Business Intelligence Framework for IT Skill Demand Analysis from Job
 - CSV export for Power BI integration
 - Individual chart download (PNG) for each visualization
 - Full PDF report download with all charts, tables, and analysis sections
-- Attractive gradient background theme (purple/indigo/pink tones)
+- Clean light theme (default Streamlit styling)
+- PDF report regenerates when filters change (reflects filtered data, not just full dataset)
 
 ## Tech Stack
 - Python 3.11, Streamlit, Pandas, NLTK, Scikit-learn, Plotly, Matplotlib, WordCloud, FPDF2, Kaleido

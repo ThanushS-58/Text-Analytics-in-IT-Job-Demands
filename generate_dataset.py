@@ -92,10 +92,10 @@ RESPONSIBILITIES = {
 def generate_dataset(n=5000):
     rows = []
     start_date = datetime(2018, 1, 1)
-    end_date = datetime(2025, 12, 31)
+    end_date = datetime(2026, 12, 31)
     date_range_days = (end_date - start_date).days
 
-    year_weights = {2018: 0.08, 2019: 0.10, 2020: 0.12, 2021: 0.14, 2022: 0.16, 2023: 0.16, 2024: 0.14, 2025: 0.10}
+    year_weights = {2018: 0.07, 2019: 0.08, 2020: 0.10, 2021: 0.12, 2022: 0.14, 2023: 0.15, 2024: 0.14, 2025: 0.12, 2026: 0.08}
 
     for i in range(n):
         title = random.choice(JOB_TITLES)

@@ -145,12 +145,14 @@ with export_placeholder:
         key="dl_csv_sidebar"
     )
 
-    if "pdf_data" not in st.session_state:
+    filter_key = f"{year_range}_{sorted(selected_roles)}_{sorted(selected_locations)}_{sorted(selected_exp)}"
+    if "pdf_data" not in st.session_state or st.session_state.get("pdf_filter_key") != filter_key:
         with st.spinner("Preparing PDF report..."):
             st.session_state["pdf_data"] = generate_pdf_report(filtered_df)
+            st.session_state["pdf_filter_key"] = filter_key
 
     st.download_button(
-        label="📥 Download Full PDF Report",
+        label="📥 Download PDF Report",
         data=st.session_state["pdf_data"],
         file_name="IT_Skill_Demand_Analysis_Report.pdf",
         mime="application/pdf",
