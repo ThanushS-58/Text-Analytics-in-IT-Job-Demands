@@ -5,7 +5,7 @@ description = "Add your description here"
 requires-python = ">=3.11"
 dependencies = [
     "fpdf>=1.7.2",
-    "fpdf2>=2.8.5",
+    "fpdf2>=2.8.6",
     "kaleido>=1.2.0",
     "matplotlib>=3.10.8",
     "nltk>=3.9.2",

@@ -1,6 +1,5 @@
 import os
 import tempfile
-from io import BytesIO
 from datetime import datetime
 from collections import Counter
 
@@ -416,12 +415,14 @@ def generate_pdf_report(filtered_df):
     pdf.set_text_color(120, 120, 120)
     pdf.cell(0, 8, "--- End of Report ---", align='C')
 
-    buf = BytesIO()
-    pdf.output(buf)
-    buf.seek(0)
+    import tempfile as _tmpfile
+    tmp_pdf = os.path.join(tmpdir, "report.pdf")
+    pdf.output(tmp_pdf, 'F')
+    with open(tmp_pdf, 'rb') as _f:
+        pdf_bytes = _f.read()
 
     for f in os.listdir(tmpdir):
         os.remove(os.path.join(tmpdir, f))
     os.rmdir(tmpdir)
 
-    return buf.getvalue()
+    return pdf_bytes

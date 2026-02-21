@@ -4,7 +4,7 @@
 An NLP and Business Intelligence Framework for IT Skill Demand Analysis from Job Postings. Built with Streamlit, this app analyzes IT job posting data using NLP techniques and visualizes insights through interactive dashboards.
 
 ## Project Architecture
-- `app.py` - Main Streamlit dashboard application (runs on port 5000)
+- `app.py` - Main Streamlit dashboard application (runs on port 8501)
 - `nlp_processor.py` - NLP processing module (text preprocessing, TF-IDF, skill extraction, taxonomies, trend analysis)
 - `pdf_report.py` - PDF report generator (creates multi-page report with all charts and tables)
 - `generate_dataset.py` - Synthetic dataset generator (5000 IT job postings)
@@ -28,5 +28,5 @@ An NLP and Business Intelligence Framework for IT Skill Demand Analysis from Job
 
 ## Running
 ```
-streamlit run app.py --server.port 5000
+streamlit run app.py --server.port 8501
 ```
