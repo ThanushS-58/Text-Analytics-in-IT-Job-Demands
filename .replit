@@ -1,11 +1,34 @@
 modules = ["python-3.11"]
 [deployment]
 deploymentTarget = "autoscale"
-run = ["streamlit", "run", "app.py", "--server.port", "5000"]
+run = [
+  "streamlit",
+  "run",
+  "app.py",
+  "--server.port",
+  "5000",
+  "--server.address",
+  "0.0.0.0",
+  "--server.headless",
+  "true",
+]
 
 [nix]
 channel = "stable-25_05"
-packages = ["cairo", "ffmpeg-full", "freetype", "ghostscript", "glibcLocales", "gobject-introspection", "gtk3", "pkg-config", "qhull", "tcl", "tk", "chromium"]
+packages = [
+  "cairo",
+  "ffmpeg-full",
+  "freetype",
+  "ghostscript",
+  "glibcLocales",
+  "gobject-introspection",
+  "gtk3",
+  "pkg-config",
+  "qhull",
+  "tcl",
+  "tk",
+  "chromium",
+]
 
 [workflows]
 runButton = "Project"
