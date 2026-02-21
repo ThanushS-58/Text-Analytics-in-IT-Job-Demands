@@ -1,6 +1,6 @@
 modules = ["python-3.11"]
 [deployment]
-deploymentTarget = "autoscale"
+deploymentTarget = "reserved_vm"
 run = [
   "streamlit",
   "run",
@@ -15,7 +15,20 @@ run = [
 
 [nix]
 channel = "stable-25_05"
-packages = ["cairo", "chromium", "ffmpeg-full", "freetype", "ghostscript", "glibcLocales", "gobject-introspection", "gtk3", "pkg-config", "qhull", "tcl", "tk"]
+packages = [
+  "cairo",
+  "chromium",
+  "ffmpeg-full",
+  "freetype",
+  "ghostscript",
+  "glibcLocales",
+  "gobject-introspection",
+  "gtk3",
+  "pkg-config",
+  "qhull",
+  "tcl",
+  "tk",
+]
 
 [workflows]
 runButton = "Project"
