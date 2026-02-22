@@ -15,7 +15,6 @@ from nlp_processor import (
     get_location_skill_data, get_salary_skill_correlation, detect_declining_skills,
     compute_tfidf, categorize_skill, SKILL_TAXONOMY
 )
-from pdf_report import generate_pdf_report
 
 def download_plotly_chart(fig, filename, label="Download Chart as PNG", width=1200, height=600, key=None):
     try:
@@ -148,6 +147,7 @@ with export_placeholder:
     filter_key = f"{year_range}_{sorted(selected_roles)}_{sorted(selected_locations)}_{sorted(selected_exp)}"
     if st.button("📥 Generate PDF Report", key="gen_pdf_sidebar"):
         with st.spinner("Preparing PDF report..."):
+            from pdf_report import generate_pdf_report
             st.session_state["pdf_data"] = generate_pdf_report(filtered_df)
             st.session_state["pdf_filter_key"] = filter_key
 
