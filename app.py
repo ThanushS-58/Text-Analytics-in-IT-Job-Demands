@@ -146,18 +146,21 @@ with export_placeholder:
     )
 
     filter_key = f"{year_range}_{sorted(selected_roles)}_{sorted(selected_locations)}_{sorted(selected_exp)}"
-    if "pdf_data" not in st.session_state or st.session_state.get("pdf_filter_key") != filter_key:
+    if st.button("📥 Generate PDF Report", key="gen_pdf_sidebar"):
         with st.spinner("Preparing PDF report..."):
             st.session_state["pdf_data"] = generate_pdf_report(filtered_df)
             st.session_state["pdf_filter_key"] = filter_key
 
-    st.download_button(
-        label="📥 Download PDF Report",
-        data=st.session_state["pdf_data"],
-        file_name="IT_Skill_Demand_Analysis_Report.pdf",
-        mime="application/pdf",
-        key="dl_pdf_sidebar"
-    )
+    if "pdf_data" in st.session_state and st.session_state.get("pdf_filter_key") == filter_key:
+        st.download_button(
+            label="📥 Download PDF Report",
+            data=st.session_state["pdf_data"],
+            file_name="IT_Skill_Demand_Analysis_Report.pdf",
+            mime="application/pdf",
+            key="dl_pdf_sidebar"
+        )
+    elif "pdf_data" in st.session_state:
+        st.info("Filters changed. Click 'Generate PDF Report' to update.")
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
