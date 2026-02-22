@@ -6,7 +6,7 @@ run = [
   "run",
   "app.py",
   "--server.port",
-  "8501",
+  "5000",
   "--server.address",
   "0.0.0.0",
   "--server.headless",
@@ -48,14 +48,14 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "streamlit run app.py --server.port 8501"
-waitForPort = 8501
+args = "streamlit run app.py --server.port 5000"
+waitForPort = 5000
 
 [workflows.workflow.metadata]
 outputType = "webview"
 
 [[ports]]
-localPort = 8501
+localPort = 5000
 externalPort = 80
 
 [userenv]
@@ -63,4 +63,4 @@ externalPort = 80
 [userenv.shared]
 STREAMLIT_SERVER_ADDRESS = "0.0.0.0"
 STREAMLIT_SERVER_HEADLESS = "true"
-STREAMLIT_SERVER_PORT = "8501"
+STREAMLIT_SERVER_PORT = "5000"
