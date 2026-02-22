@@ -1,20 +1,52 @@
 import streamlit as st
+import os
+
+st.set_page_config(
+    page_title="IT Skill Demand Analysis",
+    page_icon="📊",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+st.markdown("""
+<style>
+    .main-header {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #1f2937;
+        text-align: center;
+        padding: 0.5rem 0 0.2rem 0;
+    }
+    .sub-header {
+        font-size: 1rem;
+        color: #64748b;
+        text-align: center;
+        padding-bottom: 1rem;
+        font-weight: 500;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown('<div class="main-header">📊 IT Skill Demand Analysis Framework</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">NLP & Business Intelligence for Job Market Insights</div>', unsafe_allow_html=True)
+
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
 from io import BytesIO
-import base64
-import os
 
-from nlp_processor import (
-    clean_dataset, get_skill_frequencies, get_skill_category_counts,
-    get_yearly_skill_trends, get_role_skill_matrix, get_experience_skill_data,
-    get_location_skill_data, get_salary_skill_correlation, detect_declining_skills,
-    compute_tfidf, categorize_skill, SKILL_TAXONOMY
-)
+@st.cache_data
+def load_and_process_data(filepath, _mtime=None):
+    from nlp_processor import clean_dataset
+    df = pd.read_csv(filepath)
+    df = clean_dataset(df)
+    return df
+
+@st.cache_resource
+def get_nlp_module():
+    import nlp_processor
+    return nlp_processor
 
 def download_plotly_chart(fig, filename, label="Download Chart as PNG", width=1200, height=600, key=None):
     try:
@@ -50,38 +82,6 @@ def download_matplotlib_fig(fig, filename, label="Download Chart as PNG", key=No
         key=key
     )
 
-st.set_page_config(
-    page_title="IT Skill Demand Analysis",
-    page_icon="📊",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-st.markdown("""
-<style>
-    .main-header {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #1f2937;
-        text-align: center;
-        padding: 0.5rem 0 0.2rem 0;
-    }
-    .sub-header {
-        font-size: 1rem;
-        color: #64748b;
-        text-align: center;
-        padding-bottom: 1rem;
-        font-weight: 500;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-@st.cache_data
-def load_and_process_data(filepath, _mtime=None):
-    df = pd.read_csv(filepath)
-    df = clean_dataset(df)
-    return df
-
 def render_metric(label, value, color="#667eea"):
     st.markdown(f"""
     <div style="background: linear-gradient(135deg, {color} 0%, #764ba2 100%);
@@ -100,9 +100,7 @@ if not os.path.exists(DATA_PATH):
     generate_dataset()
 
 df = load_and_process_data(DATA_PATH, _mtime=os.path.getmtime(DATA_PATH))
-
-st.markdown('<div class="main-header">📊 IT Skill Demand Analysis Framework</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">NLP & Business Intelligence for Job Market Insights</div>', unsafe_allow_html=True)
+nlp = get_nlp_module()
 
 with st.sidebar:
     st.header("🔧 Filters")
@@ -191,7 +189,7 @@ tabs = st.tabs([
 with tabs[0]:
     st.subheader("Skill Demand Trends Over Time")
     top_n_trends = st.slider("Number of top skills to show", 5, 20, 10, key="trend_n")
-    trend_df = get_yearly_skill_trends(filtered_df, top_n=top_n_trends)
+    trend_df = nlp.get_yearly_skill_trends(filtered_df, top_n=top_n_trends)
 
     if not trend_df.empty:
         fig = px.line(trend_df, x="Year", y="Percentage", color="Skill",
@@ -213,8 +211,10 @@ with tabs[0]:
 
 with tabs[1]:
     st.subheader("Skills Word Cloud")
-    skill_freq = get_skill_frequencies(filtered_df)
+    skill_freq = nlp.get_skill_frequencies(filtered_df)
     if skill_freq:
+        from wordcloud import WordCloud
+        import matplotlib.pyplot as plt
         wc = WordCloud(width=1000, height=500, background_color="white",
                        colormap="viridis", max_words=80, prefer_horizontal=0.7,
                        min_font_size=10).generate_from_frequencies(skill_freq)
@@ -237,7 +237,7 @@ with tabs[1]:
         st.subheader("TF-IDF Top Keywords from Job Descriptions")
         valid_texts = filtered_df["Processed_Description"][filtered_df["Processed_Description"] != ""]
         if len(valid_texts) > 0:
-            tfidf_scores = compute_tfidf(valid_texts.tolist(), max_features=30)
+            tfidf_scores = nlp.compute_tfidf(valid_texts.tolist(), max_features=30)
             tfidf_df = pd.DataFrame(list(tfidf_scores.items()), columns=["Keyword", "TF-IDF Score"])
             fig_tfidf = px.bar(tfidf_df.head(20), x="TF-IDF Score", y="Keyword", orientation="h",
                                title="Top TF-IDF Keywords from Job Descriptions",
@@ -251,7 +251,7 @@ with tabs[1]:
 with tabs[2]:
     st.subheader("Role vs Skills Matrix")
     n_skills_matrix = st.slider("Number of skills in matrix", 8, 25, 15, key="matrix_n")
-    matrix_df = get_role_skill_matrix(filtered_df, top_n_skills=n_skills_matrix)
+    matrix_df = nlp.get_role_skill_matrix(filtered_df, top_n_skills=n_skills_matrix)
 
     if not matrix_df.empty:
         roles = matrix_df["Role"].tolist()
@@ -275,7 +275,7 @@ with tabs[2]:
 
 with tabs[3]:
     st.subheader("Experience Level vs Skill Demand")
-    exp_data = get_experience_skill_data(filtered_df, top_n=12)
+    exp_data = nlp.get_experience_skill_data(filtered_df, top_n=12)
 
     if not exp_data.empty:
         exp_order = ["Fresher (0-1 yrs)", "Junior (1-3 yrs)", "Mid (3-5 yrs)",
@@ -326,7 +326,7 @@ with tabs[3]:
 
 with tabs[4]:
     st.subheader("Location-Based Skill Demand")
-    loc_data = get_location_skill_data(filtered_df, top_n=10)
+    loc_data = nlp.get_location_skill_data(filtered_df, top_n=10)
 
     if not loc_data.empty:
         loc_job_counts = filtered_df["Location"].value_counts().reset_index()
@@ -364,7 +364,7 @@ with tabs[4]:
 
 with tabs[5]:
     st.subheader("Salary vs Skill Correlation")
-    salary_data = get_salary_skill_correlation(filtered_df, top_n=20)
+    salary_data = nlp.get_salary_skill_correlation(filtered_df, top_n=20)
 
     if not salary_data.empty:
         fig_sal = px.bar(salary_data, x="Skill", y="Avg_Salary",
@@ -389,7 +389,7 @@ with tabs[5]:
 
 with tabs[6]:
     st.subheader("Declining & Rising Technologies")
-    decline_df = detect_declining_skills(filtered_df)
+    decline_df = nlp.detect_declining_skills(filtered_df)
 
     if not decline_df.empty:
         st.markdown("**Top Declining Skills** (comparing earlier years to recent years)")
@@ -416,7 +416,7 @@ with tabs[6]:
 
 with tabs[7]:
     st.subheader("Structured Skill Taxonomy")
-    cat_counts = get_skill_category_counts(filtered_df)
+    cat_counts = nlp.get_skill_category_counts(filtered_df)
 
     if cat_counts:
         cat_df = pd.DataFrame(list(cat_counts.items()), columns=["Category", "Count"]).sort_values("Count", ascending=False)
@@ -436,7 +436,7 @@ with tabs[7]:
         download_plotly_chart(fig_cat_bar, "skill_category_frequency.png", "Download Category Bar Chart", key="dl_catbar")
 
         st.subheader("Taxonomy Details")
-        for category, skills in SKILL_TAXONOMY.items():
+        for category, skills in nlp.SKILL_TAXONOMY.items():
             with st.expander(f"📂 {category} ({len(skills)} skills)"):
                 st.write(", ".join([s.title() for s in skills]))
     else:
