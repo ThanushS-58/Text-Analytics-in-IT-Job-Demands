@@ -16,6 +16,22 @@ An AI-powered platform that analyzes IT job postings to identify trending skills
 
 * 📄 PDF and CSV Report Generation
 
+* 🧹 Data Cleaning & Text Preprocessing Pipeline
+
+* 📝 TF-IDF Based Skill Importance Analysis
+
+* 📍 Location-Based Demand Analysis
+
+* 👨‍💻 Role vs Skills Demand Matrix
+
+* 📉 Emerging & Declining Skill Trend Detection
+
+* 🔄 Dynamic Filtering by Role, Location, Experience, and Year
+
+* 📥 PNG Chart Export & Power BI Ready CSV Export
+
+* 🏷️ Structured Skill Taxonomy (Programming, Cloud, AI/ML, DevOps, Databases & Cybersecurity)
+
 ### ⚙️ How It Works
 
 * Load Dataset
@@ -37,11 +53,19 @@ An AI-powered platform that analyzes IT job postings to identify trending skills
 
   * Export insights in PDF and CSV formats for easy sharing and analysis.
 
+  * Skill Trend Analysis
+
+  * Detect emerging and declining technologies across job postings.
+
+* Role & Location Analysis
+
+  * Compare skill demand across roles, experience levels, and locations.
+
 ### 🏗️ System Flow
 
 DatasetNLP ProcessingSkill ExtractionDomain ClassificationAnalytics DashboardReports
 
-IT Job Postings → NLP Processing → Skill Extraction → Domain Classification → Analytics Dashboard → Reports
+IT Job Postings → Data Cleaning & NLP Processing → Skill Extraction → Skill Taxonomy Classification → Trend & Demand Analysis → Interactive Dashboard → PDF/CSV Reports
 
 ### 🛠️ Tech Stack
 
