@@ -65,6 +65,6 @@ IT Job Postings → NLP Processing → Skill Extraction → Domain Classificatio
 
 * Analysts & Policymakers – Gain workforce and technology insights
 
-### 🌟 Outcome
+### 🌟 Outcome..
 
 This framework transforms unstructured IT job postings into actionable workforce intelligence, helping users make smarter decisions in an AI-driven job market.
