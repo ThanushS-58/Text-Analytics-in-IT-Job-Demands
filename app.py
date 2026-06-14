@@ -28,7 +28,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<div class="main-header">📊 IT Skill Demand Analysis Framework</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">NLP & Business Intelligence for Job Market Insights</div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">NLP & Business Intelligence for Job Market Insights..</div>', unsafe_allow_html=True)
 
 import pandas as pd
 import numpy as np
