@@ -1,13 +1,16 @@
 [server]
 headless = true
 address = "0.0.0.0"
-port = 5000
+port = 8501
 enableCORS = false
 enableXsrfProtection = false
 enableWebsocketCompression = false
+maxUploadSize = 200
+logger.level = "info"
 
 [theme]
 base = "light"
 
 [browser]
 gatherUsageStats = false
+serverAddress = "localhost"

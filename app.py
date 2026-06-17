@@ -1,5 +1,11 @@
 import streamlit as st
 import os
+import sys
+
+# Configure logging
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 st.set_page_config(
     page_title="IT Skill Demand Analysis",
@@ -93,14 +99,21 @@ def render_metric(label, value, color="#667eea"):
 
 DATA_PATH = "data/it_job_postings.csv"
 
-if not os.path.exists(DATA_PATH):
-    st.error("Dataset not found. Generating sample dataset...")
-    from generate_dataset import generate_dataset
-    os.makedirs("data", exist_ok=True)
-    generate_dataset()
-
-df = load_and_process_data(DATA_PATH, _mtime=os.path.getmtime(DATA_PATH))
-nlp = get_nlp_module()
+try:
+    if not os.path.exists(DATA_PATH):
+        st.info("📊 Generating sample dataset on first run (this may take a moment)...")
+        logger.info("Dataset not found. Generating sample dataset...")
+        from generate_dataset import generate_dataset
+        os.makedirs("data", exist_ok=True)
+        generate_dataset()
+    
+    df = load_and_process_data(DATA_PATH, _mtime=os.path.getmtime(DATA_PATH))
+    nlp = get_nlp_module()
+    logger.info(f"Successfully loaded {len(df)} job postings")
+except Exception as e:
+    st.error(f"❌ Failed to initialize application: {str(e)}")
+    logger.error(f"Application initialization error: {str(e)}", exc_info=True)
+    st.stop()
 
 with st.sidebar:
     st.header("🔧 Filters")

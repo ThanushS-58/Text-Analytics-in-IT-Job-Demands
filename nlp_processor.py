@@ -4,23 +4,36 @@ import numpy as np
 import re
 from collections import Counter
 import nltk
+import warnings
+
+warnings.filterwarnings('ignore')
 
 nltk_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'nltk_data')
 if os.path.exists(nltk_data_dir):
     nltk.data.path.insert(0, nltk_data_dir)
 
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords', quiet=True)
-try:
-    nltk.data.find('tokenizers/punkt_tab')
-except LookupError:
-    nltk.download('punkt_tab', quiet=True)
-try:
-    nltk.data.find('corpora/wordnet')
-except LookupError:
-    nltk.download('wordnet', quiet=True)
+# Add default NLTK path to try first
+nltk_default_path = os.path.expanduser('~/nltk_data')
+if nltk_default_path not in nltk.data.path:
+    nltk.data.path.insert(0, nltk_default_path)
+
+def ensure_nltk_resource(resource_name):
+    """Safely ensure NLTK resource is available with timeout"""
+    try:
+        nltk.data.find(resource_name)
+        return True
+    except LookupError:
+        try:
+            nltk.download(resource_name, quiet=True, raise_errors=False)
+            return True
+        except Exception as e:
+            print(f"Warning: Could not download {resource_name}: {str(e)}")
+            return False
+
+# Initialize NLTK resources
+ensure_nltk_resource('corpora/stopwords')
+ensure_nltk_resource('tokenizers/punkt_tab')
+ensure_nltk_resource('corpora/wordnet')
 
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
